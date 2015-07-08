@@ -1,5 +1,5 @@
 package viewmodel;
 
 public enum Color {
-	SPADE, HEARTH, DIAMOND, CLUB;
+	SPADES, HEARTHS, DIAMONDS, CLUBS;	
 }

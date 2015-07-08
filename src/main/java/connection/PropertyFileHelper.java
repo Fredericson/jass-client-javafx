@@ -1,6 +1,5 @@
 package connection;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -30,7 +29,8 @@ public class PropertyFileHelper {
 		InputStream input = null;
 
 		try {
-			input = new FileInputStream(JASS_SERVER_PROPERTY_FILE_NAME);
+			ClassLoader loader = MessageHandler.class.getClassLoader();
+			input = loader.getResourceAsStream(JASS_SERVER_PROPERTY_FILE_NAME);
 			// load a properties file
 			prop.load(input);
 		} catch (IOException ex) {

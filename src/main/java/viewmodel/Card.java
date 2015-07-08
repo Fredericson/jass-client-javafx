@@ -2,29 +2,29 @@ package viewmodel;
 
 public enum Card {
 
-	SPADE_6(Color.SPADE, Rank.SIX), SPADE_7(Color.SPADE, Rank.SEVEN), SPADE_8(
-			Color.SPADE, Rank.EIGHT), SPADE_9(Color.SPADE, Rank.NINE), SPADE_10(
-			Color.SPADE, Rank.TEN), SPADE_J(Color.SPADE, Rank.JACK), SPADE_Q(
-			Color.SPADE, Rank.QUEEN), SPADE_K(Color.SPADE, Rank.KING), SPADE_A(
-			Color.SPADE, Rank.ACE),
+	SPADE_6(Color.SPADES, Rank.SIX), SPADE_7(Color.SPADES, Rank.SEVEN), SPADE_8(
+			Color.SPADES, Rank.EIGHT), SPADE_9(Color.SPADES, Rank.NINE), SPADE_10(
+			Color.SPADES, Rank.TEN), SPADE_J(Color.SPADES, Rank.JACK), SPADE_Q(
+			Color.SPADES, Rank.QUEEN), SPADE_K(Color.SPADES, Rank.KING), SPADE_A(
+			Color.SPADES, Rank.ACE),
 
-	HEARTH_6(Color.HEARTH, Rank.SIX), HEARTH_7(Color.HEARTH, Rank.SEVEN), HEARTH_8(
-			Color.HEARTH, Rank.EIGHT), HEARTH_9(Color.HEARTH, Rank.NINE), HEARTH_10(
-			Color.HEARTH, Rank.TEN), HEARTH_J(Color.HEARTH, Rank.JACK), HEARTH_Q(
-			Color.HEARTH, Rank.QUEEN), HEARTH_K(Color.HEARTH, Rank.KING), HEARTH_A(
-			Color.HEARTH, Rank.ACE),
+	HEARTH_6(Color.HEARTHS, Rank.SIX), HEARTH_7(Color.HEARTHS, Rank.SEVEN), HEARTH_8(
+			Color.HEARTHS, Rank.EIGHT), HEARTH_9(Color.HEARTHS, Rank.NINE), HEARTH_10(
+			Color.HEARTHS, Rank.TEN), HEARTH_J(Color.HEARTHS, Rank.JACK), HEARTH_Q(
+			Color.HEARTHS, Rank.QUEEN), HEARTH_K(Color.HEARTHS, Rank.KING), HEARTH_A(
+			Color.HEARTHS, Rank.ACE),
 
-	DIAMOND_6(Color.DIAMOND, Rank.SIX), DIAMOND_7(Color.DIAMOND, Rank.SEVEN), DIAMOND_8(
-			Color.DIAMOND, Rank.EIGHT), DIAMOND_9(Color.DIAMOND, Rank.NINE), DIAMOND_10(
-			Color.DIAMOND, Rank.TEN), DIAMOND_J(Color.DIAMOND, Rank.JACK), DIAMOND_Q(
-			Color.DIAMOND, Rank.QUEEN), DIAMOND_K(Color.DIAMOND, Rank.KING), DIAMOND_A(
-			Color.DIAMOND, Rank.ACE),
+	DIAMOND_6(Color.DIAMONDS, Rank.SIX), DIAMOND_7(Color.DIAMONDS, Rank.SEVEN), DIAMOND_8(
+			Color.DIAMONDS, Rank.EIGHT), DIAMOND_9(Color.DIAMONDS, Rank.NINE), DIAMOND_10(
+			Color.DIAMONDS, Rank.TEN), DIAMOND_J(Color.DIAMONDS, Rank.JACK), DIAMOND_Q(
+			Color.DIAMONDS, Rank.QUEEN), DIAMOND_K(Color.DIAMONDS, Rank.KING), DIAMOND_A(
+			Color.DIAMONDS, Rank.ACE),
 
-	CLUB_6(Color.CLUB, Rank.SIX), CLUB_7(Color.CLUB, Rank.SEVEN), CLUB_8(
-			Color.CLUB, Rank.EIGHT), CLUB_9(Color.CLUB, Rank.NINE), CLUB_10(
-			Color.CLUB, Rank.TEN), CLUB_J(Color.CLUB, Rank.JACK), CLUB_Q(
-			Color.CLUB, Rank.QUEEN), CLUB_K(Color.CLUB, Rank.KING), CLUB_A(
-			Color.CLUB, Rank.ACE);
+	CLUB_6(Color.CLUBS, Rank.SIX), CLUB_7(Color.CLUBS, Rank.SEVEN), CLUB_8(
+			Color.CLUBS, Rank.EIGHT), CLUB_9(Color.CLUBS, Rank.NINE), CLUB_10(
+			Color.CLUBS, Rank.TEN), CLUB_J(Color.CLUBS, Rank.JACK), CLUB_Q(
+			Color.CLUBS, Rank.QUEEN), CLUB_K(Color.CLUBS, Rank.KING), CLUB_A(
+			Color.CLUBS, Rank.ACE);
 
 	private Card(final Color color, final Rank rank) {
 		this.color = color;
