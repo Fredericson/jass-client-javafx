@@ -11,12 +11,17 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 
+import viewmodel.Card;
+import viewmodel.Trumpf;
 import connection.jassmessage.ChooseSessionDataValue;
+import connection.jassmessage.ChooseTrumpfColorDataValue;
+import connection.jassmessage.ChooseTrumpfModeDataValue;
 import connection.jassmessage.MessageBuilder;
 import connection.jassmessage.SendMessage;
-import connection.jassmessage.SendMessageDataArray;
 import connection.jassmessage.SendMessageDataMap;
 import connection.jassmessage.SendMessageType;
+import connection.mapping.CardColorMapper;
+import connection.mapping.CardNumberMapper;
 
 /**
  * JassServer Client
@@ -102,15 +107,6 @@ public class WebsocketClientEndpoint {
 	 *
 	 * @param message
 	 */
-	private void sendMessage(final SendMessageDataArray sendMessage) {
-		sendMessageString(MessageBuilder.toJSONString(sendMessage));
-	}
-
-	/**
-	 * Send a message.
-	 *
-	 * @param message
-	 */
 	private void sendMessage(final SendMessageDataMap sendMessageDataMap) {
 		sendMessageString(MessageBuilder.toJSONString(sendMessageDataMap));
 	}
@@ -137,4 +133,26 @@ public class WebsocketClientEndpoint {
 		sendMessage(sendMsg);
 	}
 
+	/**
+	 * Null means geschoben.
+	 * 
+	 * @param trumpf
+	 */
+	public void sendChooseTrumpf(final Trumpf trumpf) {
+		SendMessageDataMap sendMsg = new SendMessageDataMap(SendMessageType.CHOOSE_TRUMPF);
+		ChooseTrumpfModeDataValue mappedMode = ChooseTrumpfModeDataValue.getMappedMode(trumpf);
+		sendMsg.addData(ChooseTrumpfModeDataValue.PROPERTY_NAME, mappedMode.name());
+		ChooseTrumpfColorDataValue mappedColor = ChooseTrumpfColorDataValue.getMappedColor(trumpf);
+		if (mappedColor != null) {
+			sendMsg.addData(ChooseTrumpfColorDataValue.PROPERTY_NAME, mappedColor.name());
+		}
+		sendMessage(sendMsg);
+	}
+
+	public void sendChooseCard(final Card card) {
+		SendMessageDataMap sendMsg = new SendMessageDataMap(SendMessageType.CHOOSE_CARD);
+		sendMsg.addData(CardNumberMapper.PROPERTY_NAME, CardNumberMapper.getNumber(card.getRank()));
+		sendMsg.addData(CardColorMapper.PROPERTY_NAME, card.getColor().name());
+		sendMessage(sendMsg);
+	}
 }

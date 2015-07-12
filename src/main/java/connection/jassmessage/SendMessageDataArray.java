@@ -1,16 +1,16 @@
 package connection.jassmessage;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class SendMessageDataArray {
 
 	private final SendMessageType type;
-	private final List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+	private final MessageDataArray msgDataArray;
 
 	public SendMessageDataArray(final SendMessageType type) {
 		this.type = type;
+		this.msgDataArray = new MessageDataArray();
 	}
 
 	public SendMessageType getType() {
@@ -18,10 +18,10 @@ public class SendMessageDataArray {
 	}
 
 	public void addData(final Map<String, String> map) {
-		data.add(map);
+		msgDataArray.addData(map);
 	}
 
 	public List<Map<String, String>> getData() {
-		return data;
+		return msgDataArray.getData();
 	}
 }

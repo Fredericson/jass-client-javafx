@@ -6,7 +6,7 @@ import java.util.Map;
 public class SendMessageDataMap {
 
 	private final SendMessageType type;
-	private final Map<String, String> data = new HashMap<String, String>();
+	private final Map<String, Object> data = new HashMap<String, Object>();
 
 	public SendMessageDataMap(final SendMessageType type) {
 		this.type = type;
@@ -16,11 +16,11 @@ public class SendMessageDataMap {
 		return type;
 	}
 
-	public void addData(final String key, final String value) {
+	public void addData(final String key, final Object value) {
 		data.put(key, value);
 	}
 
-	public Map<String, String> getData() {
+	public Map<String, Object> getData() {
 		return data;
 	}
 }

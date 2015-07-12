@@ -8,11 +8,11 @@ public enum Card {
 			Color.SPADES, Rank.QUEEN), SPADE_K(Color.SPADES, Rank.KING), SPADE_A(
 			Color.SPADES, Rank.ACE),
 
-	HEARTH_6(Color.HEARTHS, Rank.SIX), HEARTH_7(Color.HEARTHS, Rank.SEVEN), HEARTH_8(
-			Color.HEARTHS, Rank.EIGHT), HEARTH_9(Color.HEARTHS, Rank.NINE), HEARTH_10(
-			Color.HEARTHS, Rank.TEN), HEARTH_J(Color.HEARTHS, Rank.JACK), HEARTH_Q(
-			Color.HEARTHS, Rank.QUEEN), HEARTH_K(Color.HEARTHS, Rank.KING), HEARTH_A(
-			Color.HEARTHS, Rank.ACE),
+	HEARTH_6(Color.HEARTS, Rank.SIX), HEARTH_7(Color.HEARTS, Rank.SEVEN), HEARTH_8(
+			Color.HEARTS, Rank.EIGHT), HEARTH_9(Color.HEARTS, Rank.NINE), HEARTH_10(
+			Color.HEARTS, Rank.TEN), HEARTH_J(Color.HEARTS, Rank.JACK), HEARTH_Q(
+			Color.HEARTS, Rank.QUEEN), HEARTH_K(Color.HEARTS, Rank.KING), HEARTH_A(
+			Color.HEARTS, Rank.ACE),
 
 	DIAMOND_6(Color.DIAMONDS, Rank.SIX), DIAMOND_7(Color.DIAMONDS, Rank.SEVEN), DIAMOND_8(
 			Color.DIAMONDS, Rank.EIGHT), DIAMOND_9(Color.DIAMONDS, Rank.NINE), DIAMOND_10(
@@ -42,4 +42,12 @@ public enum Card {
 	private final Color color;
 	private final Rank rank;
 
+	public static Card getCard(final Color color, final Rank rank) {
+		for (Card card : values()) {
+			if (card.color.equals(color) && card.rank.equals(rank)) {
+				return card;
+			}
+		}
+		throw new IllegalStateException("No Card was found for: " + color + ", " + rank);
+	}
 }
