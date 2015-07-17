@@ -8,7 +8,7 @@ import viewmodel.PlayerOnTable;
 import domain.JassTable;
 import domain.Team;
 
-public class TestBroadcastTeams {
+public class BroadcastTeamsTest {
 
 	// {"type":"BROADCAST_TEAMS","data":[{"name":"Team 1","players":[{"name":"bot1","id":0},{"name":"bot3","id":2}]},{"name":"Team 2","players":[{"name":"bot2","id":1},{"name":"bot4","id":3}]}]}
 	private static final String message = "{\"type\":\"BROADCAST_TEAMS\",\"data\":[{\"name\":\"Team 1\",\"players\":[{\"name\":\"bot1\",\"id\":0},{\"name\":\"bot3\",\"id\":2}]},{\"name\":\"Team 2\",\"players\":[{\"name\":\"bot2\",\"id\":1},{\"name\":\"bot4\",\"id\":3}]}]}";
@@ -17,7 +17,7 @@ public class TestBroadcastTeams {
 
 	@BeforeClass
 	public static void setup() {
-		jassTable = MessageBuilder.toTable(message);
+		jassTable = MessageBuilder.getBroadcastTeams(message);
 	}
 
 	@Test

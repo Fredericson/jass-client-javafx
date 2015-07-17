@@ -9,6 +9,8 @@ import viewmodel.Color;
 import viewmodel.Player;
 import viewmodel.Trumpf;
 import domain.JassTable;
+import domain.PlayerNumber;
+import domain.SchieberStich;
 
 public abstract class PlayerAction extends Player {
 
@@ -43,6 +45,16 @@ public abstract class PlayerAction extends Player {
 		}
 		trumpfCards.addAll(getOtherCards(trumpfColor));
 		otherCards.removeAll(trumpfCards);
+	}
+
+	public Card getHighestTrumpfCard() {
+		Card highest = null;
+		for (Card card : trumpfCards) {
+			if (highest == null || card.getRank().ordinal() > highest.getRank().ordinal()) {
+				highest = card;
+			}
+		}
+		return highest;
 	}
 
 	public Set<Card> getTrumpfCards() {
@@ -89,8 +101,16 @@ public abstract class PlayerAction extends Player {
 		trumpfCards.remove(card);
 		otherCards.remove(card);
 		rememberPlayedCard(card);
+		jassTableInfo.setPlayedCard(card);
 	}
 
 	protected abstract void rememberPlayedCard(Card card);
 
+	public void setActualTrumpfablePlayer(final PlayerNumber actualTrumpfablePlayer) {
+		this.jassTableInfo.setActualTrumpfablePlayer(actualTrumpfablePlayer);
+	}
+
+	public void setStich(final SchieberStich stich) {
+		this.jassTableInfo.setStich(stich);
+	}
 }

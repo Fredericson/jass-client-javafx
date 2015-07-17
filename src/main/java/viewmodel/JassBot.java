@@ -16,8 +16,11 @@ public class JassBot extends PlayerAction {
 
 	@Override
 	public Card chooseCard(final Color requestedColor) {
-		if (getTrumpfCards().size() > 0 && overtrumpf()) {
+		if (mustPlayTrumpf(requestedColor)) {
 			return pickingRandomCard(getTrumpfCards());
+		}
+		if (canTrumpf()) {
+			return getHighestTrumpfCard();
 		}
 		Set<Card> cardsForRequestedColor = getOtherCards(requestedColor);
 		if (requestedColor == null || cardsForRequestedColor.size() == 0) {
@@ -26,11 +29,30 @@ public class JassBot extends PlayerAction {
 		return pickingRandomCard(cardsForRequestedColor);
 	}
 
-	private boolean overtrumpf() {
-		return true;
-		// Ace or Ten and my Trumpf is higher
-		// Person behind didn't choose Trumpf
-		// do not give Pawn if I can get Nell (I will loose all other stich)
+	private boolean mustPlayTrumpf(final Color requestedColor) {
+		return getTrumpfCards().size() > 0 && requestedColor != null
+				&& requestedColor == jassTableInfo.getActualTrumpf().getColor();
+	}
+
+	private boolean canTrumpf() {
+		if (getTrumpfCards().size() > 0 && isOverTrumpfPossible()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean isOverTrumpfPossible() {
+		Rank highestTrumpfRankOnTable = jassTableInfo.getHighestTrumpfRankOnTable();
+		if (highestTrumpfRankOnTable == null) {
+			return true;
+		}
+		Rank myHighestTrumpfRank = getHighestTrumpfCard().getRank();
+		if (myHighestTrumpfRank.ordinal() > highestTrumpfRankOnTable.ordinal()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override

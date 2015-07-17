@@ -18,7 +18,10 @@ import viewmodel.Rank;
 import viewmodel.Trumpf;
 import connection.mapping.CardColorMapper;
 import connection.mapping.CardNumberMapper;
+import connection.mapping.PlayerNumberMapper;
+import connection.mapping.TeamMapper;
 import domain.JassTable;
+import domain.SchieberStich;
 import domain.Team;
 
 public class MessageBuilder {
@@ -65,27 +68,27 @@ public class MessageBuilder {
 		return jsonObjBuilder;
 	}
 
-	public static JassTable toTable(final String message) {
+	public static JassTable getBroadcastTeams(final String message) {
 		JassTable table = new JassTable();
 		JsonObject jsonObject = Json.createReader(new StringReader(message)).readObject();
 		JsonArray jsonArray = jsonObject.getJsonArray(FIELD_DATA);
 		for (int i = 0; i < jsonArray.size(); i++) {
 			JsonObject jsonObjectMap = jsonArray.getJsonObject(i);
-			String teamName = jsonObjectMap.getString("name");
-			Team team = Team.getTeam(teamName);
-			PlayerOnTable[] players = getPlayers(team, jsonObjectMap, "players");
+			String teamName = jsonObjectMap.getString(GetTeamsDataValue.NAME);
+			Team team = TeamMapper.getTeam(teamName);
+			PlayerOnTable[] players = getPlayers(team, jsonObjectMap);
 			table.addTeam(players);
 		}
 		return table;
 	}
 
-	private static PlayerOnTable[] getPlayers(final Team team, final JsonObject jsonObject, final String field) {
+	private static PlayerOnTable[] getPlayers(final Team team, final JsonObject jsonObject) {
 		PlayerOnTable[] players = new PlayerOnTable[2];
-		JsonArray jsonArray = jsonObject.getJsonArray(field);
+		JsonArray jsonArray = jsonObject.getJsonArray(GetPlayerDataValue.PLAYERS);
 		for (int i = 0; i < jsonArray.size(); i++) {
 			JsonObject jsonObjectMap = jsonArray.getJsonObject(i);
-			String playerName = jsonObjectMap.getString("name");
-			int playerNumber = jsonObjectMap.getInt("id") + 1;
+			String playerName = jsonObjectMap.getString(GetPlayerDataValue.NAME);
+			int playerNumber = jsonObjectMap.getInt(GetPlayerDataValue.ID) + 1;
 			PlayerOnTable player = new PlayerOnTable(playerName, team, playerNumber);
 			players[i] = player;
 		}
@@ -149,11 +152,26 @@ public class MessageBuilder {
 		return Color.valueOf(colorString);
 	}
 
-	public static Card getLastPlayedCard(final String message) {
+	public static Card getPlayedCard(final String message) {
 		JsonObject jsonObject = Json.createReader(new StringReader(message)).readObject();
 		JsonArray jsonArray = jsonObject.getJsonArray(FIELD_DATA);
 		JsonObject jsonObjectMap = jsonArray.getJsonObject(jsonArray.size() - 1);
 		return getCard(jsonObjectMap);
 	}
 
+	public static SchieberStich getStich(final String message) {
+		JsonObject jsonObject = Json.createReader(new StringReader(message)).readObject();
+		JsonObject jsonObjectMap = jsonObject.getJsonObject(FIELD_DATA);
+		int playerNumber = jsonObjectMap.getInt(GetPlayerDataValue.ID);
+		SchieberStich stich = new SchieberStich(PlayerNumberMapper.getPlayerNumber(playerNumber));
+		JsonArray jsonArray = jsonObjectMap.getJsonArray(GetTeamsDataValue.TEAMS);
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JsonObject jsonTeamMap = jsonArray.getJsonObject(i);
+			String teamName = jsonTeamMap.getString(GetTeamsDataValue.NAME);
+			Team team = TeamMapper.getTeam(teamName);
+			int points = jsonTeamMap.getInt(GetTeamsDataValue.CURRENT_ROUND_POINTS);
+			stich.setPoints(points, team);
+		}
+		return stich;
+	}
 }

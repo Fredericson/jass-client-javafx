@@ -1,34 +1,36 @@
 package domain;
 
+import viewmodel.Card;
 import viewmodel.PlayerOnTable;
+import viewmodel.Rank;
 import viewmodel.Trumpf;
 
 public class JassTable {
 
-	private PlayerOnTable player1;
-	private PlayerOnTable player2;
-	private PlayerOnTable player3;
-	private PlayerOnTable player4;
+	private final PlayerOnTable[] players = new PlayerOnTable[4];
 
 	private Trumpf actualTrumpf;
+	private PlayerNumber actualTrumpfablePlayer;
+
+	private PlayerNumber cardRequestedPlayerNumber;
 
 	private int pointsTeam1;
 	private int pointsTeam2;
 
 	public PlayerOnTable getPlayer1() {
-		return player1;
+		return players[0];
 	}
 
 	public PlayerOnTable getPlayer2() {
-		return player2;
+		return players[1];
 	}
 
 	public PlayerOnTable getPlayer3() {
-		return player3;
+		return players[2];
 	}
 
 	public PlayerOnTable getPlayer4() {
-		return player4;
+		return players[3];
 	}
 
 	public void addTeam(final PlayerOnTable[] players) {
@@ -39,15 +41,16 @@ public class JassTable {
 	public void addPlayer(final PlayerOnTable player) {
 		switch (player.getPlayerNumber()) {
 		case 1:
-			player1 = player;
+			players[0] = player;
 			break;
 		case 2:
-			player2 = player;
+			players[1] = player;
 			break;
 		case 3:
-			player3 = player;
+			players[2] = player;
+			break;
 		case 4:
-			player4 = player;
+			players[3] = player;
 			break;
 		default:
 			throw new IllegalStateException("Player " + player.getName() + " has invalid PlayerNumber: "
@@ -77,5 +80,77 @@ public class JassTable {
 
 	public void setActualTrumpf(final Trumpf actualTrumpf) {
 		this.actualTrumpf = actualTrumpf;
+	}
+
+	public PlayerNumber getActualTrumpfablePlayer() {
+		return actualTrumpfablePlayer;
+	}
+
+	public void setActualTrumpfablePlayer(final PlayerNumber actualTrumpfablePlayer) {
+		this.actualTrumpfablePlayer = actualTrumpfablePlayer;
+		this.cardRequestedPlayerNumber = PlayerNumber.PLAYER_1;
+	}
+
+	public PlayerNumber getCardRequestedPlayerNumber() {
+		return cardRequestedPlayerNumber;
+	}
+
+	public void setPlayedCard(final Card card) {
+		if (cardRequestedPlayerNumber == PlayerNumber.PLAYER_1) {
+			players[0].setPlayedCard(card);
+		} else if (cardRequestedPlayerNumber == PlayerNumber.PLAYER_2) {
+			players[1].setPlayedCard(card);
+		} else if (cardRequestedPlayerNumber == PlayerNumber.PLAYER_3) {
+			players[2].setPlayedCard(card);
+		} else if (cardRequestedPlayerNumber == PlayerNumber.PLAYER_4) {
+			players[3].setPlayedCard(card);
+		}
+		this.cardRequestedPlayerNumber = PlayerNumber.next(cardRequestedPlayerNumber);
+	}
+
+	public void setStich(final SchieberStich stich) {
+		this.cardRequestedPlayerNumber = stich.getWinner();
+		this.pointsTeam1 += stich.getPointsTeam1();
+		this.pointsTeam2 += stich.getPointsTeam2();
+		removeAllPlayedCards();
+	}
+
+	private void removeAllPlayedCards() {
+		for (PlayerOnTable player : players) {
+			player.setPlayedCard(null);
+		}
+	}
+
+	public Rank getHighestTrumpfRankOnTable() {
+		Rank actualRank = null;
+		for (PlayerOnTable player : players) {
+			if (didPlayTrumpf(player)) {
+				actualRank = getHigherRank(actualRank, player);
+			}
+		}
+		return actualRank;
+	}
+
+	private boolean didPlayTrumpf(final PlayerOnTable player) {
+		Card playedCard = player.getPlayedCard();
+		if (playedCard == null) {
+			return false;
+		}
+		return playedCard.getColor() == actualTrumpf.getColor();
+	}
+
+	private Rank getHigherRank(final Rank actualRank, final PlayerOnTable player) {
+		if (player.getPlayedCard() == null) {
+			return actualRank;
+		}
+		Rank playedRank = player.getPlayedCard().getRank();
+		if (actualRank == null) {
+			return playedRank;
+		}
+		if (playedRank.ordinal() > actualRank.ordinal()) {
+			return playedRank;
+		} else {
+			return actualRank;
+		}
 	}
 }

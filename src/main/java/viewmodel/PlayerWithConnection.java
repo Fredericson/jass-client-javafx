@@ -12,6 +12,8 @@ import connection.jassmessage.ChooseSessionDataValue;
 import connection.jassmessage.MessageBuilder;
 import connection.jassmessage.RequestMessageType;
 import domain.JassTable;
+import domain.PlayerNumber;
+import domain.SchieberStich;
 
 public class PlayerWithConnection {
 
@@ -45,7 +47,7 @@ public class PlayerWithConnection {
 					connection.sendChooseSession(ChooseSessionDataValue.AUTO_JOIN);
 				} else if (RequestMessageType.BROADCAST_SESSION_JOINED.equals(requestMsgType)) {
 				} else if (RequestMessageType.BROADCAST_TEAMS.equals(requestMsgType)) {
-					JassTable jassTable = MessageBuilder.toTable(message);
+					JassTable jassTable = MessageBuilder.getBroadcastTeams(message);
 					player.receiveTeams(jassTable);
 				} else if (RequestMessageType.DEAL_CARDS.equals(requestMsgType)) {
 					Set<Card> cards = MessageBuilder.receiveCards(message);
@@ -57,6 +59,9 @@ public class PlayerWithConnection {
 				} else if (RequestMessageType.BROADCAST_TRUMPF.equals(requestMsgType)) {
 					Trumpf trumpf = MessageBuilder.getBroadcastTrumpfData(message);
 					player.receiveTrumpfForGame(trumpf);
+					PlayerNumber actualTrumpfablePlayer = player.getJassTableInfo().getActualTrumpfablePlayer();
+					PlayerNumber nextTrumpfablePlayer = getNextTrumpfablePlayer(actualTrumpfablePlayer);
+					player.setActualTrumpfablePlayer(nextTrumpfablePlayer);
 				} else if (RequestMessageType.REQUEST_CARD.equals(requestMsgType)) {
 					Color color = MessageBuilder.getColorOfFirstPlayedCard(message);
 					Card card = player.chooseCard(color);
@@ -64,9 +69,11 @@ public class PlayerWithConnection {
 				} else if (RequestMessageType.REJECT_CARD.equals(requestMsgType)) {
 					LOGGER.info("Trumpf: " + player.getJassTableInfo().getActualTrumpf());
 				} else if (RequestMessageType.PLAYED_CARDS.equals(requestMsgType)) {
-					Card card = MessageBuilder.getLastPlayedCard(message);
+					Card card = MessageBuilder.getPlayedCard(message);
 					player.receivePlayedCard(card);
 				} else if (RequestMessageType.BROADCAST_STICH.equals(requestMsgType)) {
+					SchieberStich stich = MessageBuilder.getStich(message);
+					player.setStich(stich);
 				} else if (RequestMessageType.BROADCAST_GAME_FINISHED.equals(requestMsgType)) {
 				} else if (RequestMessageType.BROADCAST_WINNER_TEAM.equals(requestMsgType)) {
 				}
@@ -74,6 +81,17 @@ public class PlayerWithConnection {
 				LOGGER.info(player.getName() + ": Error while receiving message: " + message, ex);
 			}
 		}
+	}
+
+	private PlayerNumber getNextTrumpfablePlayer(final PlayerNumber actualTrumpfablePlayer) {
+		PlayerNumber nextPlayerNumber;
+		if (actualTrumpfablePlayer != null) {
+			nextPlayerNumber = PlayerNumber.next(actualTrumpfablePlayer);
+		} else {
+			// for Webplatformz Jassserver the first Trumpfable Player is always Player1
+			nextPlayerNumber = PlayerNumber.PLAYER_1;
+		}
+		return nextPlayerNumber;
 	}
 
 	public void connectToServer() {
